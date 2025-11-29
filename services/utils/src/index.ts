@@ -3,8 +3,11 @@ import dotenv from 'dotenv'
 import routes from './route.js'
 import cors from 'cors'
 import { v2 as cloudinary } from 'cloudinary';
+import { startSendEmailConsumer } from './consumer.js';
 
 dotenv.config()
+
+startSendEmailConsumer()
 
 // Configuration
 cloudinary.config({
