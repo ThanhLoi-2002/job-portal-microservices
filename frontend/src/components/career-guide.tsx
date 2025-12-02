@@ -1,5 +1,5 @@
 "use client";
-import { CareerGuideResponse, utils_service } from "@/type";
+import { CareerGuideResponse } from "@/type";
 import axios from "axios";
 import {
   ArrowRight,
@@ -25,6 +25,8 @@ import {
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { utils_service } from "./context/AppContext";
+import toast from "react-hot-toast";
 
 const CareerGuide = () => {
   const [open, setOpen] = useState(false);
@@ -50,7 +52,7 @@ const CareerGuide = () => {
 
   const getCareerGuidance = async () => {
     if (skills.length === 0) {
-      alert("Please add at least on skill");
+      toast.error("Please add at least on skill");
       return;
     }
 
@@ -62,9 +64,9 @@ const CareerGuide = () => {
       });
 
       setResponse(data);
-      alert("Career guidance generated");
+      toast.success("Career guidance generated");
     } catch (error: any) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -141,12 +143,12 @@ const CareerGuide = () => {
                         {skills.map((s) => (
                           <div
                             key={s}
-                            className="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800"
+                            className="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 mr-2 rounded-full bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800"
                           >
                             <span className="text-sm font-medium">{s}</span>
                             <button
                               onClick={() => removeSkill(s)}
-                              className="h-5 w-5 rounded-full bg-red-500 text-white flex in-checked: justify-center"
+                              className="h-5 w-5 rounded-full bg-red-500 text-white flex justify-center items-center"
                             >
                               <X size={13} />
                             </button>
@@ -279,7 +281,20 @@ const CareerGuide = () => {
                         <BookOpen size={20} className="text-blue-600"/>
                         {response.learningApproach.title}
                       </h3>
+
+                      <ul className="space-y-2">
+                        {
+                          response.learningApproach.points.map((point, index) => (
+                            <li key={index} className="text-sm flex items-start gap-2">
+                              <span className="text-blue-600 mt-0.5">•</span>
+                              <span className="opacity-90" dangerouslySetInnerHTML={{__html: point}}/>
+                            </li>
+                          ))
+                        }
+                      </ul>
                   </div>
+
+                  <Button onClick={resetDialog} variant={"outline"} className="w-full">Start New Analysis</Button>
                 </div>
               </>
             )}

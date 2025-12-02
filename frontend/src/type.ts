@@ -1,3 +1,4 @@
+import { Dispatch, ReactNode, SetStateAction } from "react"
 
 export interface JobOptions {
     title: string
@@ -6,7 +7,7 @@ export interface JobOptions {
 }
 
 export interface SkillsToLearn {
-    title: string 
+    title: string
     why: string
     how: string
 }
@@ -28,4 +29,59 @@ export interface CareerGuideResponse {
     learningApproach: LearningApproach
 }
 
-export const utils_service = "http://localhost:5001"
+export interface ScoreBreakdown {
+    formatting: { score: number; feedback: string },
+    keyword: { score: number; feedback: string },
+    structure: { score: number; feedback: string },
+    readability: { score: number; feedback: string },
+}
+
+export interface Suggestion {
+    category: string
+    issue: string
+    recommendation: string
+    priority: "high" | "medium" | "low"
+}
+
+export interface ResumeAnalysisResponse {
+    atsScore: number
+    scoreBreakdown: ScoreBreakdown
+    suggestions: Suggestion[]
+    strengths: string[]
+    summary: string
+}
+
+export interface User {
+    user_id: number
+    name: string;
+    email: string
+    phone_number: string
+    role: "jobseeker" | "recruiter"
+    bio: string | null
+    resume: string | null
+    resume_public_id: string | null
+    profile_pic: string | null
+    profile_pic_public_id: string | null
+    skills: string[]
+    subcription: string | null
+}
+
+export interface AppContextType {
+    user?: User | null
+    loading: boolean
+    btnLoading: boolean
+    isAuth: boolean
+    setUser: Dispatch<SetStateAction<User|null>>
+    setLoading: Dispatch<SetStateAction<boolean>>
+    setIsAuth: Dispatch<SetStateAction<boolean>>
+    logoutUser: () => Promise<void>
+} 
+
+export interface AppProviderProps {
+    children: ReactNode
+}
+
+export interface AccountProps {
+    user: User
+    isYourAccount: boolean
+}

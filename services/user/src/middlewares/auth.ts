@@ -14,7 +14,7 @@ interface User {
     profile_pic: string | null
     profile_pic_public_id: string | null
     skills: string[]
-    subcription: string | null
+    subscription: string | null
 }
 
 export interface AuthenticatedRequest extends Request {
@@ -24,13 +24,13 @@ export interface AuthenticatedRequest extends Request {
 export const isAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const authHeader = req.headers.authorization;
+
         if (!authHeader || !authHeader.startsWith("Bearer")) {
             res.status(401).json({
                 message: "Authorization header is missing or invalid"
             })
             return
         }
-
         const token = authHeader.split(" ")[1]
 
         const decodedPayload = jwt.verify(token, process.env.JWT_SEC as string) as JwtPayload
@@ -44,7 +44,7 @@ export const isAuth = async (req: AuthenticatedRequest, res: Response, next: Nex
 
         const users = await sql`
         SELECT u.user_id, u.name, u.email, u.phone_number, u.role, u.bio, u.resume, u.resume_public_id, 
-                u.profile_pic, u.profile_pic, u.profile_pic_public_id, u.subcription, 
+                u.profile_pic, u.profile_pic, u.profile_pic_public_id, u.subscription, 
                 ARRAY_AGG(s.name) FILTER (WHERE s.name IS NOT NULL) as skills
                 FROM users u LEFT JOIN user_skills us ON u.user_id = us.user_id
                 LEFT JOIN skills s ON us.skill_id = s.skill_id

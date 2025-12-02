@@ -1,4 +1,3 @@
-import { Request, Response } from "express"
 import { TryCatch } from "../utils/tryCatch.js"
 import ErrorHandler from "../utils/errorHandler.js"
 import { sql } from "../utils/db.js"
@@ -68,7 +67,7 @@ export const loginUser = TryCatch(async (req, res, next) => {
     if (!email || !password) throw new ErrorHandler(400, "Please fill all details")
 
     const user = await sql`
-        SELECT u.user_id, u.name, u.email, u.password, u.phone_number, u.role, u.bio, u.resume, u.profile_pic, u.subcription, ARRAY_AGG(s.name) 
+        SELECT u.user_id, u.name, u.email, u.password, u.phone_number, u.role, u.bio, u.resume, u.profile_pic, u.subscription, ARRAY_AGG(s.name) 
         FILTER (WHERE s.name IS NOT NULL) as skills 
         FROM users u 
         LEFT JOIN user_skills us ON u.user_id = us.user_id 

@@ -15,7 +15,7 @@ export const getUserProfile = TryCatch(async (req: AuthenticatedRequest, res) =>
 
     const users = await sql`
             SELECT u.user_id, u.name, u.email, u.phone_number, u.role, u.bio, u.resume, u.resume_public_id, 
-                    u.profile_pic, u.profile_pic, u.profile_pic_public_id, u.subcription, 
+                    u.profile_pic, u.profile_pic, u.profile_pic_public_id, u.subscription, 
                     ARRAY_AGG(s.name) FILTER (WHERE s.name IS NOT NULL) as skills
                     FROM users u LEFT JOIN user_skills us ON u.user_id = us.user_id
                     LEFT JOIN skills s ON us.skill_id = s.skill_id
@@ -214,7 +214,7 @@ export const appyForJob = TryCatch(async (req: AuthenticatedRequest, res) => {
     if (!job.is_active) throw new ErrorHandler(400, "Job is not active")
 
     const now = Date.now()
-    const subTime = req.user?.subcription ? new Date(req.user.subcription).getTime() : 0
+    const subTime = req.user?.subscription ? new Date(req.user.subscription).getTime() : 0
 
     const isSubscribed = subTime > now
 
