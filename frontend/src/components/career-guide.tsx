@@ -1,7 +1,18 @@
 "use client";
 import { CareerGuideResponse, utils_service } from "@/type";
 import axios from "axios";
-import { ArrowRight, Loader2, Sparkle, Sparkles, X } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Briefcase,
+  Lightbulb,
+  Loader2,
+  Sparkle,
+  Sparkles,
+  Target,
+  TrendingUp,
+  X,
+} from "lucide-react";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -106,9 +117,9 @@ const CareerGuide = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
-                  <div className="space-y-2">
+                  <div className="space-y-2 ">
                     <Label htmlFor="skill">Add Skills</Label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
                       <Input
                         id="skill"
                         placeholder="e.g, React, Nodejs, Python ..."
@@ -145,20 +156,132 @@ const CareerGuide = () => {
                     </div>
                   )}
 
-                  <Button onClick={getCareerGuidance} disabled={loading || skills.length == 0} className="w-full h-11 gap-2">
+                  <Button
+                    onClick={getCareerGuidance}
+                    disabled={loading || skills.length == 0}
+                    className="w-full h-11 gap-2"
+                  >
                     {loading ? (
                       <>
                         <Loader2 size={18} className="animate-spin" /> Analyzing
                         Your Skills ...
                       </>
                     ) : (
-                      <><Sparkles size={18} /> Generate career guidance</>
+                      <>
+                        <Sparkles size={18} /> Generate career guidance
+                      </>
                     )}
                   </Button>
                 </div>
               </>
             ) : (
-              <></>
+              <>
+                <DialogHeader>
+                  <DialogTitle className="text-2xl flex items-center gap-2">
+                    <Target className="text-blue-600" />
+                    Your personalized Career guide
+                  </DialogTitle>
+                </DialogHeader>
+
+                <div className="space-y-6 py-4">
+                  {/*Summary */}
+                  <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-b-blue-200 dark:border-b-blue-800">
+                    <div className="flex items-start gap-3">
+                      <Lightbulb
+                        className="text-blue-600 mt-1 shrink-0"
+                        size={20}
+                      />
+                      <div>
+                        <h3 className="font-semibold mb-2"> Career Summary</h3>
+                        <p className="text-sm leading-relaxed opacity-90">
+                          {response.summary}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/*Job options */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                      <Briefcase size={20} className="text-blue-600" />
+                      Recomended Career Path
+                    </h3>
+                    <div className="space-y-3">
+                      {response.jobOptions.map((job, index) => (
+                        <div
+                          className="p-4 rounded-lg border hover:border-blue-500 transition-colors"
+                          key={index}
+                        >
+                          <h4 className="font-semibold text-base mb-2">
+                            {job.title}
+                          </h4>
+
+                          <div className="space-y-2 text-sm">
+                            <div className="">
+                              <span className="font-medium opacity-70">
+                                {" "}
+                                Responsibilities:
+                              </span>
+                              <span className="opacity-80">
+                                {job.responsibilities}
+                              </span>
+                            </div>
+
+                            <span className="font-medium opacity-70">
+                              Why this Role:
+                            </span>
+
+                            <span className="opacity-80">{job.why}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/*Skills to learn */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                      <TrendingUp size={20} className="text-blue-600" />
+                      Skills to Enhance Your Career
+                    </h3>
+
+                    <div className="space-y-4">
+                      {response.skillsToLearn.map((category, index) => (
+                        <div className="space-y-2" key={index}>
+                          <h4 className="font-semibold text-sm text-blue-600">
+                            {category.category}
+                          </h4>
+                          <div className="space-y-2">
+                            {category.skills.map((skill, index) => (
+                              <div
+                                key={index}
+                                className="p-3 rounded-lg bg-secondary border text-sm"
+                              >
+                                <p className="font-medium mb-1">
+                                  {skill.title}
+                                </p>
+
+                                <p className="text-xs opacity-70 mb-1">
+                                  <span className="font-medium">How:</span>
+                                  {skill.how}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/*Learning approach */}
+                  <div className="p-4 rounded-lg border bg-blue-950/20 dark:bg-red-950/20">
+                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                        <BookOpen size={20} className="text-blue-600"/>
+                        {response.learningApproach.title}
+                      </h3>
+                  </div>
+                </div>
+              </>
             )}
           </DialogContent>
         </Dialog>
